@@ -29,7 +29,19 @@ app.post("/account", (req, res) => {
 
   return res
     .status(201)
-    .send({ message: "Customer created successfully", customer });
+    .json({ message: "Customer created successfully", customer });
+});
+
+app.get("/statement/:cpf", (req, res) => {
+  const { cpf } = req.params;
+
+  const customer = customers.find((customer) => customer.cpf === cpf);
+
+  if(!customer) {
+    return res.status(404).json({ message: "Customer not found"})
+  }
+
+  return res.status(200).json(customer.statement);
 });
 
 app.listen(3333);
