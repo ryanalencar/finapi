@@ -47,9 +47,27 @@ app.post("/account", (req, res) => {
     .json({ message: "Customer created successfully", customer });
 });
 
-app.get("/statement", verifyIfExistsAccountCPF, (req, res) => {
-  const { customer } = req
+app.use(verifyIfExistsAccountCPF);
+
+app.get("/statement", (req, res) => {
+  const { customer } = req;
   return res.status(200).json(customer.statement);
+});
+
+app.post("/deposit", (req, res) => {
+  const { amount, description } = req.body;
+  const { customer } = req;
+
+  const statementOperation = {
+    description,  
+    amount,
+    created_at: new Date(),
+    type: 'credit'
+  }
+
+  customer.statement.push(statementOperation);
+
+  return res.status(201).json({message: 'Deposit was successfully created', customer})
 });
 
 app.listen(3333);
