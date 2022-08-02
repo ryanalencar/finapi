@@ -60,7 +60,21 @@ app.use(verifyIfExistsAccountCPF);
 
 app.get("/statement", (req, res) => {
   const { customer } = req;
-  return res.status(200).json(customer.statement);
+  const { date } = req.query;
+
+  let statement = customer.statement;
+
+  if (date) {
+    const dateFormatted = new Date(date + " 00:00");
+
+    statement = statement.filter(
+      (operation) =>
+        operation.created_at.toDateString() ===
+        new Date(dateFormatted).toDateString()
+    );
+  }
+
+  return res.status(200).json(statement);
 });
 
 app.post("/deposit", (req, res) => {
@@ -99,7 +113,9 @@ app.post("/withdraw", (req, res) => {
 
   customer.statement.push(statementOperation);
 
-  return res.status(201).json({ message: "Withdraw was successfully created", customer})
+  return res
+    .status(201)
+    .json({ message: "Withdraw was successfully created", customer });
 });
 
 app.listen(3333);
