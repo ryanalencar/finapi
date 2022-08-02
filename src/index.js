@@ -118,4 +118,15 @@ app.post("/withdraw", (req, res) => {
     .json({ message: "Withdraw was successfully created", customer });
 });
 
+app.put("/account", (req, res) => {
+  const { name } = req.body;
+  const { customer } = req;
+
+  customer.name = name;
+
+  return res
+    .status(201)
+    .json({ message: "Customer updated successfully", customer });
+});
+
 app.listen(3333);
