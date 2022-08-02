@@ -129,4 +129,10 @@ app.put("/account", (req, res) => {
     .json({ message: "Customer updated successfully", customer });
 });
 
+app.get("/account", (req, res) => {
+  const { customer } = req;
+
+  return res.status(201).json(customer);
+});
+
 app.listen(3333);
